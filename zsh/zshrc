@@ -1,0 +1,4 @@
+local external="${0:a:h:h}/external"
+
+ZSH_THEME="simple"
+source "${external}/ohmyzsh/oh-my-zsh.sh"

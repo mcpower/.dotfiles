@@ -1,1 +1,10 @@
 #!/usr/bin/env zsh
+
+# replace (expanded $HOME) with ~ just in case it changes
+local dotfiles="${${0:a:h}/$HOME/~}"
+local zshrc_template="source ${dotfiles}/zsh/zshrc"
+
+if ! grep -q "$zshrc_template" ~/.zshrc; then
+    mv ~/.zshrc ~/.zshrc.old.${(%):-%D{%F.%T}}
+    echo "$zshrc_template" > ~/.zshrc
+fi
