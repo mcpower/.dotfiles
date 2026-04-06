@@ -26,32 +26,15 @@ autoload -U compaudit compinit zrecompile
 # I hope I will never use NFS mounted home directories, so we can safely ignore
 # the host too.
 ZSH_COMPDUMP="$ZSH_CACHE_DIR/zcompdump"
-# Construct zcompdump metadata
-local zcompdump_revision="#dotfiles revision: $(builtin cd -q "$dotfiles"; git rev-parse HEAD 2>/dev/null)"
-local zcompdump_fpath="#fpath: $fpath"
-# Delete the zcompdump file if zcompdump metadata changed
-if ! command grep -q -Fx "$zcompdump_revision" "$ZSH_COMPDUMP" 2>/dev/null \
-   || ! command grep -q -Fx "$zcompdump_fpath" "$ZSH_COMPDUMP" 2>/dev/null; then
-  command rm -f "$ZSH_COMPDUMP"
-  zcompdump_refresh=1
-fi
+# ohmyzsh adds the OMZ Git revision and the contents of $fpath to the compdump,
+# and compares against it every time this is run to check if there are any
+# updates. This is very overkill, especially as zsh automatically uses the
+# number of files as a proxy for when this changes. Skip all of that.
 source "$external/ohmyzsh/lib/compfix.zsh"
 # Load only from secure directories
 compinit -i -d "$ZSH_COMPDUMP"
 # If completion insecurities exist, warn the user
 handle_completion_insecurities &|
-# Append zcompdump metadata if missing
-if (( $zcompdump_refresh )) \
-  || ! command grep -q -Fx "$zcompdump_revision" "$ZSH_COMPDUMP" 2>/dev/null; then
-  # Use `tee` in case the $ZSH_COMPDUMP filename is invalid, to silence the error
-  # See https://github.com/ohmyzsh/ohmyzsh/commit/dd1a7269#commitcomment-39003489
-  tee -a "$ZSH_COMPDUMP" &>/dev/null <<EOF
-
-$zcompdump_revision
-$zcompdump_fpath
-EOF
-fi
-unset zcompdump_revision zcompdump_fpath zcompdump_refresh
 # zcompile the completion dump file if the .zwc is older or missing.
 if command mkdir "${ZSH_COMPDUMP}.lock" 2>/dev/null; then
   zrecompile -q -p "$ZSH_COMPDUMP"
