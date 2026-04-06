@@ -26,6 +26,7 @@ if ! grep -q "$initvim_template" "$initvim_location" 2> /dev/null; then
   echo "sourced nvim/init.vim"
 fi
 
+# TODO: reduce repetition here?
 local jjconfig_location=~/.config/jj/config.toml
 mkdir -p "${jjconfig_location:h}"
 if [[ $(readlink -e $jjconfig_location) != ${0:a:h}/jj/config.toml ]]; then
@@ -33,4 +34,12 @@ if [[ $(readlink -e $jjconfig_location) != ${0:a:h}/jj/config.toml ]]; then
   # use relative links, in case $HOME changes location
   ln -sr ${0:a:h}/jj/config.toml $jjconfig_location
   echo "symlinked jj/config.toml"
+fi
+
+local gitconfig_location=~/.config/git/config
+mkdir -p "${gitconfig_location:h}"
+if [[ $(readlink -e $gitconfig_location) != ${0:a:h}/git/config ]]; then
+  mv ${gitconfig_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  ln -sr ${0:a:h}/git/config $gitconfig_location
+  echo "symlinked git/config"
 fi

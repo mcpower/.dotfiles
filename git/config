@@ -1,0 +1,9 @@
+[user]
+    name = mcpower
+    email = mcpower@users.noreply.github.com
+
+[core]
+    autocrlf = false
+
+[merge]
+    conflictstyle = diff3
