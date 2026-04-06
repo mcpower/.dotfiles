@@ -5,32 +5,32 @@ local dotfiles="${${0:a:h}/$HOME/~}"
 
 local zshrc_template="source ${dotfiles}/zsh/zshrc"
 if ! grep -q "$zshrc_template" ~/.zshrc 2> /dev/null; then
-    mv ~/.zshrc{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
-    echo "$zshrc_template" > ~/.zshrc
-    echo "sourced zsh/zshrc"
+  mv ~/.zshrc{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  echo "$zshrc_template" > ~/.zshrc
+  echo "sourced zsh/zshrc"
 fi
 
 local zshenv_template="source ${dotfiles}/zsh/zshenv"
 if ! grep -q "$zshenv_template" ~/.zshenv 2>/dev/null; then
-    mv ~/.zshenv{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
-    echo "$zshenv_template" > ~/.zshenv
-    echo "sourced zsh/zshenv"
+  mv ~/.zshenv{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  echo "$zshenv_template" > ~/.zshenv
+  echo "sourced zsh/zshenv"
 fi
 
 local initvim_location=~/.config/nvim/init.vim
 local initvim_template="source ${dotfiles}/nvim/init.vim"
 mkdir -p "${initvim_location:h}"
 if ! grep -q "$initvim_template" "$initvim_location" 2> /dev/null; then
-    mv ${initvim_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
-    echo "$initvim_template" > $initvim_location
-    echo "sourced nvim/init.vim"
+  mv ${initvim_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  echo "$initvim_template" > $initvim_location
+  echo "sourced nvim/init.vim"
 fi
 
 local jjconfig_location=~/.config/jj/config.toml
 mkdir -p "${jjconfig_location:h}"
 if [[ $(readlink -e $jjconfig_location) != ${0:a:h}/jj/config.toml ]]; then
-    mv ${jjconfig_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
-    # use relative links, in case $HOME changes location
-    ln -sr ${0:a:h}/jj/config.toml $jjconfig_location
-    echo "symlinked jj/config.toml"
+  mv ${jjconfig_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  # use relative links, in case $HOME changes location
+  ln -sr ${0:a:h}/jj/config.toml $jjconfig_location
+  echo "symlinked jj/config.toml"
 fi
