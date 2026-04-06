@@ -9,6 +9,12 @@ if ! grep -q "$zshrc_template" ~/.zshrc 2> /dev/null; then
     echo "$zshrc_template" > ~/.zshrc
 fi
 
+local zshenv_template="source ${dotfiles}/zsh/zshenv"
+if ! grep -q "$zshenv_template" ~/.zshenv 2>/dev/null; then
+    mv ~/.zshenv{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+    echo "$zshenv_template" > ~/.zshenv
+fi
+
 local initvim_location=~/.config/nvim/init.vim
 local initvim_template="source ${dotfiles}/nvim/init.vim"
 mkdir -p "${initvim_location:h}"
