@@ -3,16 +3,8 @@
 # replace (expanded $HOME) with ~ just in case it changes
 local dotfiles="${${0:a:h}/$HOME/~}"
 
-setopt extended_glob
-if [[ -z external/powerlevel10k/gitstatus/usrbin/gitstatusd-*(#qN) ]]; then
-  # Use the prebuilt gitstatusd binaries.
-  # TODO: Delete this once we get jj integration.
-  make -C $dotfiles/external/powerlevel10k/gitstatus pkg
-fi
-
 local zsh_deps=(
   external/powerlevel10k/{*.zsh-theme,internal/*.zsh}
-  external/powerlevel10k/gitstatus/{*.zsh,install}
 )
 for f in $zsh_deps; do
   if [[ ! $f.zwc -nt $f ]]; then
