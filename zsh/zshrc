@@ -11,7 +11,6 @@ local zdotfiles="${dotfiles}/zsh"
 
 # BEGIN: modification of external/ohmyzsh/oh-my-zsh.sh
 # SPDX-License-Identifier: MIT
-ZSH="${external}/ohmyzsh"
 ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 # Create cache and completions dir and add to $fpath
 mkdir -p "$ZSH_CACHE_DIR/completions"
@@ -37,7 +36,7 @@ if ! command grep -q -Fx "$zcompdump_revision" "$ZSH_COMPDUMP" 2>/dev/null \
   command rm -f "$ZSH_COMPDUMP"
   zcompdump_refresh=1
 fi
-source "$ZSH/lib/compfix.zsh"
+source "$external/ohmyzsh/lib/compfix.zsh"
 # Load only from secure directories
 compinit -i -d "$ZSH_COMPDUMP"
 # If completion insecurities exist, warn the user
@@ -59,10 +58,10 @@ if command mkdir "${ZSH_COMPDUMP}.lock" 2>/dev/null; then
   zrecompile -q -p "$ZSH_COMPDUMP"
   command rm -rf "$ZSH_COMPDUMP.zwc.old" "${ZSH_COMPDUMP}.lock"
 fi
-for lib_file in "$ZSH"/lib/*.zsh; do
+for lib_file in "$external"/ohmyzsh/lib/*.zsh; do
   source "$lib_file"
 done
-source "$ZSH/plugins/fzf/fzf.plugin.zsh"
+source "$external/ohmyzsh/plugins/fzf/fzf.plugin.zsh"
 # set completion colors to be the same as `ls`, after theme has been loaded
 [[ -z "$LS_COLORS" ]] || zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # END: modification of external/ohmyzsh/oh-my-zsh.sh
