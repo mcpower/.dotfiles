@@ -9,8 +9,66 @@ local dotfiles="${0:a:h:h}"
 local external="${dotfiles}/external"
 local zdotfiles="${dotfiles}/zsh"
 
-plugins=(fzf)
-source "${external}/ohmyzsh/oh-my-zsh.sh"
+# BEGIN: modification of external/ohmyzsh/oh-my-zsh.sh
+# SPDX-License-Identifier: MIT
+ZSH="${external}/ohmyzsh"
+ZSH_CACHE_DIR="$ZSH/cache"
+# Create cache and completions dir and add to $fpath
+mkdir -p "$ZSH_CACHE_DIR/completions"
+(( ${fpath[(Ie)$ZSH_CACHE_DIR/completions]} )) || fpath=("$ZSH_CACHE_DIR/completions" $fpath)
+# mcpower: all other fpath modifications are pointless...
+# Load all stock functions (from $fpath files) called below.
+autoload -U compaudit compinit zrecompile
+# Figure out the SHORT hostname
+if [[ "$OSTYPE" = darwin* ]]; then
+  # macOS's $HOST changes with dhcp, etc. Use LocalHostName if possible.
+  SHORT_HOST=$(scutil --get LocalHostName 2>/dev/null) || SHORT_HOST="${HOST/.*/}"
+else
+  SHORT_HOST="${HOST/.*/}"
+fi
+# Save the location of the current completion dump file.
+if [[ -z "$ZSH_COMPDUMP" ]]; then
+  ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.zcompdump-${SHORT_HOST}-${ZSH_VERSION}"
+fi
+# Construct zcompdump metadata
+local zcompdump_revision="#dotfiles revision: $(builtin cd -q "$dotfiles"; git rev-parse HEAD 2>/dev/null)"
+local zcompdump_fpath="#fpath: $fpath"
+# Delete the zcompdump file if zcompdump metadata changed
+if ! command grep -q -Fx "$zcompdump_revision" "$ZSH_COMPDUMP" 2>/dev/null \
+   || ! command grep -q -Fx "$zcompdump_fpath" "$ZSH_COMPDUMP" 2>/dev/null; then
+  command rm -f "$ZSH_COMPDUMP"
+  zcompdump_refresh=1
+fi
+source "$ZSH/lib/compfix.zsh"
+# Load only from secure directories
+compinit -i -d "$ZSH_COMPDUMP"
+# If completion insecurities exist, warn the user
+handle_completion_insecurities &|
+# Append zcompdump metadata if missing
+if (( $zcompdump_refresh )) \
+  || ! command grep -q -Fx "$zcompdump_revision" "$ZSH_COMPDUMP" 2>/dev/null; then
+  # Use `tee` in case the $ZSH_COMPDUMP filename is invalid, to silence the error
+  # See https://github.com/ohmyzsh/ohmyzsh/commit/dd1a7269#commitcomment-39003489
+  tee -a "$ZSH_COMPDUMP" &>/dev/null <<EOF
+
+$zcompdump_revision
+$zcompdump_fpath
+EOF
+fi
+unset zcompdump_revision zcompdump_fpath zcompdump_refresh
+# zcompile the completion dump file if the .zwc is older or missing.
+if command mkdir "${ZSH_COMPDUMP}.lock" 2>/dev/null; then
+  zrecompile -q -p "$ZSH_COMPDUMP"
+  command rm -rf "$ZSH_COMPDUMP.zwc.old" "${ZSH_COMPDUMP}.lock"
+fi
+for lib_file in "$ZSH"/lib/*.zsh; do
+  source "$lib_file"
+done
+source "$ZSH/plugins/fzf/fzf.plugin.zsh"
+# set completion colors to be the same as `ls`, after theme has been loaded
+[[ -z "$LS_COLORS" ]] || zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# END: modification of external/ohmyzsh/oh-my-zsh.sh
+
 source "${external}/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 source "${external}/zsh-autosuggestions/zsh-autosuggestions.zsh"
