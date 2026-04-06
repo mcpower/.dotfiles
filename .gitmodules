@@ -14,3 +14,7 @@
     path = external/fast-syntax-highlighting
     url = https://github.com/zdharma-continuum/fast-syntax-highlighting.git
     shallow = true
+[submodule "external/zsh-autosuggestions"]
+    path = external/zsh-autosuggestions
+    url = https://github.com/zsh-users/zsh-autosuggestions.git
+    shallow = true
