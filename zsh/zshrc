@@ -3,6 +3,12 @@ local external="${0:a:h:h}/external"
 ZSH_THEME="simple"
 source "${external}/ohmyzsh/oh-my-zsh.sh"
 
+export EDITOR='nvim'
+export VISUAL='nvim'
+export PAGER='less'
+
+alias vim='nvim'
+
 # old competitive programming functions, rewritten in zsh
 function __run() {
   emulate -LR zsh
