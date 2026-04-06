@@ -8,3 +8,11 @@ if ! grep -q "$zshrc_template" ~/.zshrc; then
     mv ~/.zshrc ~/.zshrc.old.${(%):-%D{%F.%T}}
     echo "$zshrc_template" > ~/.zshrc
 fi
+
+local initvim_location=~/.config/nvim/init.vim
+local initvim_template="source ${dotfiles}/nvim/init.vim"
+mkdir -p "${initvim_location:h}"
+if ! grep -q "$initvim_template" "$initvim_location" 2> /dev/null; then
+    mv ${initvim_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+    echo "$initvim_template" > $initvim_location
+fi
