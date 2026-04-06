@@ -36,9 +36,12 @@ compinit -i -d "$ZSH_COMPDUMP"
 # If completion insecurities exist, warn the user
 handle_completion_insecurities &|
 # zcompile the completion dump file if the .zwc is older or missing.
-if command mkdir "${ZSH_COMPDUMP}.lock" 2>/dev/null; then
+if zrecompile -t -q -p "$ZSH_COMPDUMP" && \
+   command mkdir "${ZSH_COMPDUMP}.lock" 2>/dev/null; then
   zrecompile -q -p "$ZSH_COMPDUMP"
-  command rm -rf "$ZSH_COMPDUMP.zwc.old" "${ZSH_COMPDUMP}.lock"
+  # zrecompile leaves around a .old file which ohmyzsh deletes. Don't bother
+  # deleting it here.
+  command rmdir "${ZSH_COMPDUMP}.lock"
 fi
 for lib_file in "$external"/ohmyzsh/lib/*.zsh; do
   source "$lib_file"
