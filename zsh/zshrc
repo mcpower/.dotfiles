@@ -11,12 +11,14 @@ local zdotfiles="${dotfiles}/zsh"
 
 # BEGIN: modification of external/ohmyzsh/oh-my-zsh.sh
 # SPDX-License-Identifier: MIT
+
+# Used in a lot of ohmyzsh scripts.
 ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
-# Create cache and completions dir and add to $fpath
+# $ZSH_CACHE_DIR/completions should be used to store completions that compinit
+# can pick up.
 mkdir -p "$ZSH_CACHE_DIR/completions"
 (( ${fpath[(Ie)$ZSH_CACHE_DIR/completions]} )) || fpath=("$ZSH_CACHE_DIR/completions" $fpath)
-# mcpower: all other fpath modifications are pointless...
-# Load all stock functions (from $fpath files) called below.
+
 autoload -U compaudit compinit zrecompile
 # ohmyzsh uses the zsh version + host to avoid "subtle problems that happen when
 # people upgrade ZSH or use NFS mounted home directories" from a 2013 commit:
@@ -30,12 +32,18 @@ ZSH_COMPDUMP="$ZSH_CACHE_DIR/zcompdump"
 # and compares against it every time this is run to check if there are any
 # updates. This is very overkill, especially as zsh automatically uses the
 # number of files as a proxy for when this changes. Skip all of that.
-source "$external/ohmyzsh/lib/compfix.zsh"
-# Load only from secure directories
+
+# Explicitly use -i here to ignore insecure directories. If we omitted -i and
+# there were insecure directories, compinit would ask for input - slowing down
+# p10k's instant prompt.
 compinit -i -d "$ZSH_COMPDUMP"
-# If completion insecurities exist, warn the user
+# Warn the user after the fact if there were insecure directories.
+source "$external/ohmyzsh/lib/compfix.zsh"
 handle_completion_insecurities &|
+
 # zcompile the completion dump file if the .zwc is older or missing.
+# Use a lockfile to prevent races, see
+# https://github.com/ohmyzsh/ohmyzsh/issues/11341
 if zrecompile -t -q -p "$ZSH_COMPDUMP" && \
    command mkdir "${ZSH_COMPDUMP}.lock" 2>/dev/null; then
   zrecompile -q -p "$ZSH_COMPDUMP"
@@ -43,10 +51,14 @@ if zrecompile -t -q -p "$ZSH_COMPDUMP" && \
   # deleting it here.
   command rmdir "${ZSH_COMPDUMP}.lock"
 fi
+
+# Source the rest of ohmyzsh.
+# TODO: remove unneeded lib files here.
 for lib_file in "$external"/ohmyzsh/lib/*.zsh; do
   source "$lib_file"
 done
 source "$external/ohmyzsh/plugins/fzf/fzf.plugin.zsh"
+
 # set completion colors to be the same as `ls`, after theme has been loaded
 [[ -z "$LS_COLORS" ]] || zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # END: modification of external/ohmyzsh/oh-my-zsh.sh
