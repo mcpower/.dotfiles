@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+autoload -U zrecompile
 
 # replace (expanded $HOME) with ~ just in case it changes
 local dotfiles="${${0:a:h}/$HOME/~}"
@@ -14,9 +15,7 @@ local zsh_deps=(
   external/zsh-async/async.zsh
 )
 for f in $zsh_deps; do
-  if [[ ! $f.zwc -nt $f ]]; then
-    zcompile -R -- $f.zwc $f && echo "compiled $f"
-  fi
+  zrecompile -p -R $f
 done
 mv external/fast-syntax-highlighting/{chroma,→chroma}
 
