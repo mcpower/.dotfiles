@@ -21,6 +21,9 @@ export PAGER='less'
 source ~/.env.zsh
 
 alias vim='nvim'
+# this assumes GNU coreutils, can't be bothered supporting others
+# put directories first, then sort dotfiles > uppercase > lowercase
+alias ls="${aliases[ls]:-ls} --group-directories-first -v"
 
 # WSL-only functions
 if [[ "$(uname -r)" = *icrosoft* ]]; then
