@@ -18,7 +18,7 @@ path=(
 export EDITOR='nvim'
 export VISUAL='nvim'
 export PAGER='less'
-source ~/.env.zsh
+[[ ! -f ~/.env.zsh ]] || source ~/.env.zsh
 
 alias vim='nvim'
 # this assumes GNU coreutils, can't be bothered supporting others
