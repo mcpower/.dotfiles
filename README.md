@@ -5,7 +5,7 @@ Opinionated dotfiles.
 To install on Ubuntu, probably Debian too:
 
 ```zsh
-sudo apt install zsh git neovim watchman rustup
+sudo apt install zsh git neovim fzf watchman rustup
 # Don't forget to set up your GitHub SSH keys!
 git clone --recurse-submodules --shallow-submodules git@github.com:mcpower/.dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
@@ -24,7 +24,7 @@ jj b track --remote=origin main
 If you don't intend on working on this repo and just want a read-only version:
 
 ```zsh
-sudo apt install zsh git neovim watchman
+sudo apt install zsh git neovim fzf watchman
 git clone --recurse-submodules --shallow-submodules --depth=1 https://github.com/mcpower/.dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
 chsh -s $(which zsh)
