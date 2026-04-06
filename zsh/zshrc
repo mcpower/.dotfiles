@@ -11,6 +11,7 @@ local zdotfiles="${dotfiles}/zsh"
 
 plugins=(fzf)
 source "${external}/ohmyzsh/oh-my-zsh.sh"
+source "${external}/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 source "${external}/powerlevel10k/powerlevel10k.zsh-theme"
 source "${external}/zsh-async/async.zsh"
 source "${zdotfiles}/p10k.zsh"
