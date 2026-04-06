@@ -10,6 +10,7 @@
     path = external/zsh-async
     url = https://github.com/mafredri/zsh-async.git
     shallow = true
+    ignore = dirty
 [submodule "external/fast-syntax-highlighting"]
     path = external/fast-syntax-highlighting
     url = https://github.com/zdharma-continuum/fast-syntax-highlighting.git

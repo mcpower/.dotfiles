@@ -7,9 +7,11 @@ cd ${~dotfiles}
 setopt extended_glob
 mv external/fast-syntax-highlighting/{→chroma,chroma}
 local zsh_deps=(
+  external/ohmyzsh/{oh-my-zsh.sh,lib/*.zsh,plugins/fzf/*.plugin.zsh}
   external/fast-syntax-highlighting/{fast*~*.zwc,.fast*~*.zwc,**/*.ch,**/*.zsh}
   external/zsh-autosuggestions/{zsh-autosuggestions.zsh,src/**/*.zsh}
   external/powerlevel10k/{*.zsh-theme,internal/*.zsh}
+  external/zsh-async/async.zsh
 )
 for f in $zsh_deps; do
   if [[ ! $f.zwc -nt $f ]]; then
