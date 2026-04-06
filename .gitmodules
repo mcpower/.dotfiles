@@ -2,3 +2,7 @@
 	path = external/ohmyzsh
     url = https://github.com/ohmyzsh/ohmyzsh.git
     shallow = true
+[submodule "external/powerlevel10k"]
+    path = external/powerlevel10k
+    url = https://github.com/romkatv/powerlevel10k.git
+    shallow = true

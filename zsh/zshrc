@@ -1,8 +1,18 @@
-local external="${0:a:h:h}/external"
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
-ZSH_THEME="simple"
+local dotfiles="${0:a:h:h}"
+local external="${dotfiles}/external"
+local zdotfiles="${dotfiles}/zsh"
+
 plugins=(fzf)
 source "${external}/ohmyzsh/oh-my-zsh.sh"
+source "${external}/powerlevel10k/powerlevel10k.zsh-theme"
+source "${zdotfiles}/p10k.zsh"
 
 export PNPM_HOME=~/.local/share/pnpm
 # Ensure path arrays do not contain duplicates.
