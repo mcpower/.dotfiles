@@ -1,6 +1,7 @@
 local external="${0:a:h:h}/external"
 
 ZSH_THEME="simple"
+plugins=(fzf)
 source "${external}/ohmyzsh/oh-my-zsh.sh"
 
 export PNPM_HOME=~/.local/share/pnpm
