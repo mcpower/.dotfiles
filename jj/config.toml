@@ -4,6 +4,10 @@
 name = "mcpower"
 email = "mcpower@users.noreply.github.com"
 
+[fsmonitor]
+backend = "watchman"
+watchman.register-snapshot-trigger = true
+
 [ui]
 default-command = ["log"]
 merge-editor = "vscode"
