@@ -2,3 +2,64 @@ local external="${0:a:h:h}/external"
 
 ZSH_THEME="simple"
 source "${external}/ohmyzsh/oh-my-zsh.sh"
+
+# old competitive programming functions, rewritten in zsh
+function __run() {
+  emulate -LR zsh
+  setopt nullglob
+  setopt clobber
+  local source_pattern="${1}"
+  local compile_command=(${(z)2})
+  local run_command="${3}"
+
+  local source_file=$(ls -t ${~source_pattern} | head -n1)
+  $compile_command $source_file || return
+
+  for input_file in *.in; do
+    echo --- $source_file $input_file
+    local expected_file=(${input_file%in}[ao]??)
+    local output_file=$(mktemp --suffix=.run_out)
+    {
+      $run_command $source_file < $input_file > $output_file
+      if [[ $? -ne 0 ]] then
+        echo "!!! RE (exit code $?) !!!"
+        cat $output_file
+        continue
+      fi
+      if (( ${#expected_file[@]} > 0 )); then
+        local diff_file=$(mktemp --suffix=.run_diff)
+        {
+          if ! diff -y $output_file $expected_file > $diff_file; then
+            echo "!!! WA !!!"
+            cat $diff_file
+          fi
+        } always {
+          command rm $diff_file
+        }
+      else
+        echo "!!! no expected output !!!"
+        cat $output_file
+      fi
+    } always {
+      command rm $output_file
+    }
+  done
+}
+function run() {
+  __run \
+    "*.c*" \
+    "g++ -g -std=c++11 -Wall -Wextra -Wconversion -Wshadow -Wfatal-errors -fsanitize=undefined -o sol" \
+    "./sol"
+}
+function runfast() {
+  __run \
+    "*.c*" \
+    "g++ -g -std=c++11 -Wall -Wextra -Wconversion -Wshadow -Wfatal-errors -O3 -o sol" \
+    "./sol"
+}
+function runpy() {
+  __run "*.py" "true" "python3"
+}
+function runpypy() {
+  __run "*.py" "true" "pypy3"
+}
