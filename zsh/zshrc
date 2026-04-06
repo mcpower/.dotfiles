@@ -12,7 +12,7 @@ local zdotfiles="${dotfiles}/zsh"
 # BEGIN: modification of external/ohmyzsh/oh-my-zsh.sh
 # SPDX-License-Identifier: MIT
 ZSH="${external}/ohmyzsh"
-ZSH_CACHE_DIR="$ZSH/cache"
+ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 # Create cache and completions dir and add to $fpath
 mkdir -p "$ZSH_CACHE_DIR/completions"
 (( ${fpath[(Ie)$ZSH_CACHE_DIR/completions]} )) || fpath=("$ZSH_CACHE_DIR/completions" $fpath)
@@ -27,9 +27,7 @@ else
   SHORT_HOST="${HOST/.*/}"
 fi
 # Save the location of the current completion dump file.
-if [[ -z "$ZSH_COMPDUMP" ]]; then
-  ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.zcompdump-${SHORT_HOST}-${ZSH_VERSION}"
-fi
+ZSH_COMPDUMP="$ZSH_CACHE_DIR/zcompdump-${SHORT_HOST}-${ZSH_VERSION}"
 # Construct zcompdump metadata
 local zcompdump_revision="#dotfiles revision: $(builtin cd -q "$dotfiles"; git rev-parse HEAD 2>/dev/null)"
 local zcompdump_fpath="#fpath: $fpath"
