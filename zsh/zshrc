@@ -3,6 +3,17 @@ local external="${0:a:h:h}/external"
 ZSH_THEME="simple"
 source "${external}/ohmyzsh/oh-my-zsh.sh"
 
+export PNPM_HOME=~/.local/share/pnpm
+# Ensure path arrays do not contain duplicates.
+typeset -gU cdpath fpath mailpath path
+path=(
+  ~/bin
+  ~/.local/bin
+  ~/.cargo/bin
+  $PNPM_HOME
+  $path
+)
+
 export EDITOR='nvim'
 export VISUAL='nvim'
 export PAGER='less'
