@@ -25,3 +25,12 @@ if ! grep -q "$initvim_template" "$initvim_location" 2> /dev/null; then
     echo "$initvim_template" > $initvim_location
     echo "sourced nvim/init.vim"
 fi
+
+local jjconfig_location=~/.config/jj/config.toml
+mkdir -p "${jjconfig_location:h}"
+if [[ $(readlink -e $jjconfig_location) != ${0:a:h}/jj/config.toml ]]; then
+    mv ${jjconfig_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+    # use relative links, in case $HOME changes location
+    ln -sr ${0:a:h}/jj/config.toml $jjconfig_location
+    echo "symlinked jj/config.toml"
+fi
