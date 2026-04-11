@@ -9,6 +9,17 @@ local dotfiles="${0:a:h:h}"
 local external="${dotfiles}/external"
 local zdotfiles="${dotfiles}/zsh"
 
+export PNPM_HOME=~/.local/share/pnpm
+# Ensure path arrays do not contain duplicates.
+typeset -gU cdpath fpath mailpath path
+path=(
+  ~/bin
+  ~/.local/bin
+  ~/.cargo/bin
+  $PNPM_HOME
+  $path
+)
+
 # BEGIN: modification of external/ohmyzsh/oh-my-zsh.sh
 # SPDX-License-Identifier: MIT
 
@@ -37,6 +48,9 @@ ZSH_COMPDUMP="$ZSH_CACHE_DIR/zcompdump"
 # Assume jj's completion code (based on clap) never changes.
 if (( $+commands[jj] )) && [[ ! -f "$ZSH_CACHE_DIR/completions/_jj" ]]; then
   COMPLETE=zsh jj >| "$ZSH_CACHE_DIR/completions/_jj" &|
+fi
+if (( $+commands[pnpm] )); then
+  pnpm completion zsh >| "$ZSH_CACHE_DIR/completions/_pnpm" &|
 fi
 
 # Explicitly use -i here to ignore insecure directories. If we omitted -i and
@@ -97,23 +111,13 @@ source "${external}/powerlevel10k/powerlevel10k.zsh-theme"
 source "${external}/zsh-async/async.zsh"
 source "${zdotfiles}/p10k.zsh"
 
-export PNPM_HOME=~/.local/share/pnpm
-# Ensure path arrays do not contain duplicates.
-typeset -gU cdpath fpath mailpath path
-path=(
-  ~/bin
-  ~/.local/bin
-  ~/.cargo/bin
-  $PNPM_HOME
-  $path
-)
-
 export EDITOR='nvim'
 export VISUAL='nvim'
 export PAGER='less'
 [[ ! -f ~/.env.zsh ]] || source ~/.env.zsh
 
 alias vim='nvim'
+alias pn='pnpm'
 # this assumes GNU coreutils, can't be bothered supporting others
 # put directories first, then sort dotfiles > uppercase > lowercase
 alias ls="${aliases[ls]:-ls} --group-directories-first -v"
