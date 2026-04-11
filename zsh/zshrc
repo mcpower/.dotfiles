@@ -121,21 +121,7 @@ fi
 
 # old competitive programming functions, rewritten in zsh
 autoload __run
-function run() {
-  __run \
-    "*.c*" \
-    "g++ -g -std=c++11 -Wall -Wextra -Wconversion -Wshadow -Wfatal-errors -fsanitize=undefined -o sol" \
-    "./sol"
-}
-function runfast() {
-  __run \
-    "*.c*" \
-    "g++ -g -std=c++11 -Wall -Wextra -Wconversion -Wshadow -Wfatal-errors -O3 -o sol" \
-    "./sol"
-}
-function runpy() {
-  __run "*.py" "true" "python3"
-}
-function runpypy() {
-  __run "*.py" "true" "pypy3"
-}
+alias run='__run "*.c*" "g++ -g -std=c++11 -Wall -Wextra -Wconversion -Wshadow -Wfatal-errors -o sol -fsanitize=undefined" ./sol'
+alias runfast='__run "*.c*" "g++ -g -std=c++11 -Wall -Wextra -Wconversion -Wshadow -Wfatal-errors -o sol -O3" ./sol'
+alias runpy='__run "*.py" true python3'
+alias runpypy='__run "*.py" true pypy3'
