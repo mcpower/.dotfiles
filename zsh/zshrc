@@ -15,7 +15,8 @@ local zdotfiles="${dotfiles}/zsh"
 # Used in a lot of ohmyzsh scripts.
 ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 # $ZSH_CACHE_DIR/completions should be used to store completions that compinit
-# can pick up.
+# can pick up. Ensure that `_command` files are CREATED before compinit to get
+# compinit to pick it up.
 mkdir -p "$ZSH_CACHE_DIR/completions"
 fpath=("$zdotfiles/functions" "$ZSH_CACHE_DIR/completions" $fpath)
 
@@ -32,6 +33,11 @@ ZSH_COMPDUMP="$ZSH_CACHE_DIR/zcompdump"
 # and compares against it every time this is run to check if there are any
 # updates. This is very overkill, especially as zsh automatically uses the
 # number of files as a proxy for when this changes. Skip all of that.
+
+# Assume jj's completion code (based on clap) never changes.
+if (( $+commands[jj] )) && [[ ! -f "$ZSH_CACHE_DIR/completions/_jj" ]]; then
+  COMPLETE=zsh jj >| "$ZSH_CACHE_DIR/completions/_jj" &|
+fi
 
 # Explicitly use -i here to ignore insecure directories. If we omitted -i and
 # there were insecure directories, compinit would ask for input - slowing down
