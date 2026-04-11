@@ -17,7 +17,7 @@ ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 # $ZSH_CACHE_DIR/completions should be used to store completions that compinit
 # can pick up.
 mkdir -p "$ZSH_CACHE_DIR/completions"
-(( ${fpath[(Ie)$ZSH_CACHE_DIR/completions]} )) || fpath=("$ZSH_CACHE_DIR/completions" $fpath)
+fpath=("$zdotfiles/functions" "$ZSH_CACHE_DIR/completions" $fpath)
 
 autoload -U compaudit compinit zrecompile
 # ohmyzsh uses the zsh version + host to avoid "subtle problems that happen when
@@ -120,47 +120,7 @@ if [[ "$(uname -r)" = *icrosoft* ]]; then
 fi
 
 # old competitive programming functions, rewritten in zsh
-function __run() {
-  emulate -LR zsh
-  setopt nullglob
-  setopt clobber
-  local source_pattern="${1}"
-  local compile_command=(${(z)2})
-  local run_command="${3}"
-
-  local source_file=$(ls -t ${~source_pattern} | head -n1)
-  $compile_command $source_file || return
-
-  for input_file in *.in; do
-    echo --- $source_file $input_file
-    local expected_file=(${input_file%in}[ao]??)
-    local output_file=$(mktemp --suffix=.run_out)
-    {
-      $run_command $source_file < $input_file > $output_file
-      if [[ $? -ne 0 ]] then
-        echo "!!! RE (exit code $?) !!!"
-        cat $output_file
-        continue
-      fi
-      if (( ${#expected_file[@]} > 0 )); then
-        local diff_file=$(mktemp --suffix=.run_diff)
-        {
-          if ! diff -y $output_file $expected_file > $diff_file; then
-            echo "!!! WA !!!"
-            cat $diff_file
-          fi
-        } always {
-          command rm $diff_file
-        }
-      else
-        echo "!!! no expected output !!!"
-        cat $output_file
-      fi
-    } always {
-      command rm $output_file
-    }
-  done
-}
+autoload __run
 function run() {
   __run \
     "*.c*" \
