@@ -52,10 +52,31 @@ if zrecompile -t -q -p "$ZSH_COMPDUMP" && \
   command rmdir "${ZSH_COMPDUMP}.lock"
 fi
 
-# Source the rest of ohmyzsh.
-# TODO: remove unneeded lib files here.
-for lib_file in "$external"/ohmyzsh/lib/*.zsh; do
-  source "$lib_file"
+local omz_libs=(
+  # async_prompt          # Replaced by async.zsh
+  # bzr                   # I use p10k for prompt
+  clipboard               # Reasonable unified clipboard aliases
+  # cli                   # Opinionated CLI for omz features I don't use
+  # compfix               # Sourced above
+  completion              # Reasonable defaults/setopts
+  # correction            # I don't use correction
+  # diagnostics           # Only used for debugging
+  directories             # Reasonable setopts but a lot of opinionated aliases…
+  functions               # A LOT of opinionated functions, some used below…
+  # git                   # I use p10k for prompt
+  grep                    # Reasonable defaults/aliases
+  history                 # Reasonable defaults, plus an opinionated `omz_history`…
+  key-bindings            # Good defaults
+  misc                    # Reasonable defaults…? Uses `env_default` from `functions`
+  # nvm                   # I use p10k for prompt
+  # prompt_info_functions # I use p10k for prompt
+  # spectrum              # Redundant with `colors`, loaded in `theme-and-appearance`
+  termsupport             # Sets terminal titles. Uses `omz_urlencode` from `functions`
+  theme-and-appearance    # Sets diff / ls colours, plus random exports
+  # vcs_info              # I use p10k for prompt
+)
+for lib in $omz_libs; do
+  source "$external/ohmyzsh/lib/$lib.zsh"
 done
 source "$external/ohmyzsh/plugins/fzf/fzf.plugin.zsh"
 
