@@ -114,7 +114,7 @@ source "${zdotfiles}/p10k.zsh"
 export EDITOR='nvim'
 export VISUAL='nvim'
 export PAGER='less'
-[[ ! -f ~/.env.zsh ]] || source ~/.env.zsh
+[[ -f ~/.env.zsh ]] && source ~/.env.zsh
 
 alias vim='nvim'
 alias pn='pnpm'
