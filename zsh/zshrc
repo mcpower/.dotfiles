@@ -16,7 +16,7 @@ path=(
   ~/bin
   ~/.local/bin
   ~/.cargo/bin
-  $PNPM_HOME
+  $PNPM_HOME/bin
   $path
 )
 
