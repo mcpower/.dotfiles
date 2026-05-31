@@ -21,27 +21,27 @@ mv external/fast-syntax-highlighting/{chroma,→chroma}
 
 local zshrc_template="source ${dotfiles}/zsh/zshrc"
 if ! grep -q "$zshrc_template" ~/.zshrc 2> /dev/null; then
-  mv ~/.zshrc{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  mv ~/.zshrc{,.old.${(%):-%D{%F.%T}}} 2> /dev/null && echo "backed up .zshrc"
   echo "$zshrc_template" > ~/.zshrc
   echo "sourced zsh/zshrc"
 fi
 
 local zshenv_template="source ${dotfiles}/zsh/zshenv"
 if ! grep -q "$zshenv_template" ~/.zshenv 2>/dev/null; then
-  mv ~/.zshenv{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  mv ~/.zshenv{,.old.${(%):-%D{%F.%T}}} 2> /dev/null && echo "backed up .zshenv"
   echo "$zshenv_template" > ~/.zshenv
   echo "sourced zsh/zshenv"
 fi
 
 for rc in .zlogin .zlogout .zprofile .p10k.zsh; do
-  mv ~/$rc{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  mv ~/$rc{,.old.${(%):-%D{%F.%T}}} 2> /dev/null && echo "backed up $rc"
 done
 
 local initvim_location=~/.config/nvim/init.vim
 local initvim_template="source ${dotfiles}/nvim/init.vim"
 mkdir -p "${initvim_location:h}"
 if ! grep -q "$initvim_template" "$initvim_location" 2> /dev/null; then
-  mv ${initvim_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  mv ${initvim_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null && echo "backed up init.vim"
   echo "$initvim_template" > $initvim_location
   echo "sourced nvim/init.vim"
 fi
@@ -50,7 +50,7 @@ fi
 local jjconfig_location=~/.config/jj/config.toml
 mkdir -p "${jjconfig_location:h}"
 if [[ $(readlink -e $jjconfig_location) != ${0:a:h}/jj/config.toml ]]; then
-  mv ${jjconfig_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  mv ${jjconfig_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null && echo "backed up jj/config.toml"
   # use relative links, in case $HOME changes location
   ln -sr ${0:a:h}/jj/config.toml $jjconfig_location
   echo "symlinked jj/config.toml"
@@ -59,7 +59,7 @@ fi
 local gitconfig_location=~/.config/git/config
 mkdir -p "${gitconfig_location:h}"
 if [[ $(readlink -e $gitconfig_location) != ${0:a:h}/git/config ]]; then
-  mv ${gitconfig_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null
+  mv ${gitconfig_location}{,.old.${(%):-%D{%F.%T}}} 2> /dev/null && echo "backed up git/config"
   ln -sr ${0:a:h}/git/config $gitconfig_location
   echo "symlinked git/config"
 fi
