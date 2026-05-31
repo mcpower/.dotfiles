@@ -19,7 +19,7 @@ merge-editor = "vscode"
 
 [aliases]
 amend = ["squash", "--keep-emptied"]
-tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
+tug = ["bookmark", "advance"]
 
 l = ["log", "-r", "ancestors(reachable(@, mutable()), 2)"]
 
@@ -34,6 +34,9 @@ edit- = ["prev", "--edit"]
 new- = ["new", "-r", "@-"]
 show- = ["show", "-r", "@-"]
 split- = ["split", "-r", "@-"]
+
+[revsets]
+"bookmark-advance-to" = "heads(ancestors(@, 2) ~ empty())"
 
 [templates]
 log = 'my_log'
